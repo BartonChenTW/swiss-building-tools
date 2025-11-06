@@ -82,11 +82,13 @@ def get_df_by_key(df_data, label, by='EGID', col_sum=[], col_avg=[], col_join=[]
     return df_return
 
 
-def expand_house_number_ranges(house_no_str, separator=','):
+def expand_house_number_ranges(house_no_str, separator=',', step=2):
     """Expand house number ranges in a string.
 
     Args:
         house_no_str (str): A string containing house numbers and ranges.
+        separator (str): The separator used to split house numbers.
+        step (int): The step value for ranges (default is 2 for even/odd).
 
     Returns:
         list: A list of individual house numbers as strings.
@@ -100,7 +102,7 @@ def expand_house_number_ranges(house_no_str, separator=','):
             start, end = part.split('-')
             try:
                 start, end = int(start), int(end)
-                house_numbers.extend([str(i) for i in range(start, end + 1)])
+                house_numbers.extend([str(i) for i in range(start, end + 1, step)])
                 continue
             except:
                 print('Warning: Non-integer house number range encountered:', part)
