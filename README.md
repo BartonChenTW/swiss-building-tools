@@ -15,14 +15,14 @@ pip install -e /path/to/swiss-address-tools
 
 ### From Git repository
 ```bash
-pip install git+https://github.com/yourusername/swiss-address-tools.git
+pip install git+https://github.com/BartonChenTW/swiss-building-tools
 ```
 
 ## Usage
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 # Prepare your data
 df = pd.DataFrame({

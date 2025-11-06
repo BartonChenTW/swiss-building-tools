@@ -4,14 +4,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="swiss-address-tools",
+    name="swiss-building-tools",
     version="0.1.2",
-    author="Your Name",
-    author_email="your.email@example.com",
-    description="Tools for mapping Swiss addresses to EGID using GeoAdmin API",
+    author="Barton Chen",
+    author_email="barton.chen.energy@gmail.com",
+    description="Tools for processing Swiss building data",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/swiss-address-tools",
+    url="https://github.com/BartonChenTW/swiss-building-tools",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
