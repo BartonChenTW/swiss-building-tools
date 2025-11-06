@@ -155,6 +155,42 @@ print(len(df_expanded))  # Output: 3 rows
 
 ---
 
+### expand_house_number_ranges
+
+```{eval-rst}
+.. function:: expand_house_number_ranges(house_no_str, separator=',')
+
+   Expand house number ranges in a string into individual house numbers.
+   
+   This function parses a string containing house numbers and ranges (e.g., "1-5, 10, 20-22")
+   and expands them into a list of individual house numbers.
+   
+   :param house_no_str: A string containing house numbers and ranges
+   :type house_no_str: str
+   :param separator: Separator between house numbers or ranges (default: ',')
+   :type separator: str
+   :return: A list of individual house numbers as strings
+   :rtype: list
+```
+
+**Example:**
+
+```python
+from swiss_address_tools import expand_house_number_ranges
+
+# Expand a range
+result = expand_house_number_ranges("1-5, 10, 20-22")
+print(result)
+# Output: ['1', '2', '3', '4', '5', '10', '20', '21', '22']
+
+# Handle non-integer values
+result = expand_house_number_ranges("10a, 12-14, 20b")
+print(result)
+# Output: ['10a', '12', '13', '14', '20b']
+```
+
+---
+
 ## Data Structures
 
 ### Result Columns

@@ -2,6 +2,10 @@
 
 Tools for mapping Swiss addresses to EGID (Federal Building Identifier) using the GeoAdmin API.
 
+## Documentation
+
+Full documentation is available at: https://bartonchentw.github.io/swiss-building-tools/
+
 ## Installation
 
 ### From local directory (development)

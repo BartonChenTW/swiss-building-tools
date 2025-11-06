@@ -79,3 +79,31 @@ def get_df_by_key(df_data, label, by='EGID', col_sum=[], col_avg=[], col_join=[]
         df_return[f'unique.{col}'] = df_unique[col]
         
     return df_return
+
+
+def expand_house_number_ranges(house_no_str, seperator=','):
+    """Expand house number ranges in a string.
+
+    Args:
+        house_no_str (str): A string containing house numbers and ranges.
+
+    Returns:
+        list: A list of individual house numbers as strings.
+    """
+    house_numbers = []
+    parts = house_no_str.split(seperator)
+
+    for part in parts:
+        part = part.strip()
+        if '-' in part:
+            start, end = part.split('-')
+            try:
+                start, end = int(start), int(end)
+                house_numbers.extend([str(i) for i in range(start, end + 1)])
+                continue
+            except:
+                print('Warning: Non-integer house number range encountered:', part)
+
+        house_numbers.append(part)
+
+    return house_numbers

@@ -274,6 +274,40 @@ print("EGIDs can now be used to join with building geometry data")
 
 ---
 
+## Example 10: Expanding House Number Ranges
+
+Use the `expand_house_number_ranges` utility function to expand house number ranges:
+
+```python
+from swiss_address_tools import expand_house_number_ranges
+
+# Expand simple range
+result = expand_house_number_ranges("1-5")
+print(result)
+# Output: ['1', '2', '3', '4', '5']
+
+# Expand multiple ranges with individual numbers
+result = expand_house_number_ranges("10-12, 15, 20-22")
+print(result)
+# Output: ['10', '11', '12', '15', '20', '21', '22']
+
+# Handle non-numeric house numbers
+result = expand_house_number_ranges("10a, 12-14, 20b")
+print(result)
+# Output: ['10a', '12', '13', '14', '20b']
+
+# Use with address processing
+addresses_with_ranges = ["Hauptstrasse 10-14", "Bahnhofstrasse 1-3"]
+
+for address in addresses_with_ranges:
+    # Extract the range part
+    house_range = address.split()[-1]
+    expanded = expand_house_number_ranges(house_range, separator='-')
+    print(f"{address} → {expanded}")
+```
+
+---
+
 ## Tips and Best Practices
 
 ```{tip}
