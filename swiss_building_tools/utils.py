@@ -1,5 +1,6 @@
 """Utility functions for swiss-address-tools."""
 
+import pandas as pd
 
 def li2str(li, sep=','):
     """
@@ -81,7 +82,7 @@ def get_df_by_key(df_data, label, by='EGID', col_sum=[], col_avg=[], col_join=[]
     return df_return
 
 
-def expand_house_number_ranges(house_no_str, seperator=','):
+def expand_house_number_ranges(house_no_str, separator=','):
     """Expand house number ranges in a string.
 
     Args:
@@ -91,7 +92,7 @@ def expand_house_number_ranges(house_no_str, seperator=','):
         list: A list of individual house numbers as strings.
     """
     house_numbers = []
-    parts = house_no_str.split(seperator)
+    parts = house_no_str.split(separator)
 
     for part in parts:
         part = part.strip()
