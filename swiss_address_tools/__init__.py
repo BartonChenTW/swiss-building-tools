@@ -1,6 +1,6 @@
 """Swiss Address to EGID mapping tools using GeoAdmin API."""
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 from .mapping import (
     get_bldg_attrs_from_address,

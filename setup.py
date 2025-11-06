@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="swiss-address-tools",
-    version="0.1.1",
+    version="0.1.2",
     author="Your Name",
     author_email="your.email@example.com",
     description="Tools for mapping Swiss addresses to EGID using GeoAdmin API",
