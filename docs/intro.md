@@ -1,0 +1,55 @@
+# Swiss Address Tools Documentation
+
+Welcome to the Swiss Address Tools documentation! This package provides tools for mapping Swiss addresses to EGID (Federal Building Identifier) using the GeoAdmin API.
+
+## Overview
+
+Swiss Address Tools is a Python library that helps you:
+
+- **Map Swiss postal addresses to EGID**: Convert addresses to Federal Building Identifiers
+- **Handle complex address formats**: Support for multiple house numbers (e.g., "10/12" or "10, 12")
+- **Flexible matching options**: Both exact and fuzzy matching capabilities
+- **Detailed mapping notes**: Comprehensive feedback for troubleshooting
+
+## Quick Start
+
+```python
+import pandas as pd
+from swiss_address_tools import get_egid_from_address
+
+# Prepare your data
+df = pd.DataFrame({
+    'address': ['Bahnhofstrasse 10, 8001 Zürich', 'Bundesplatz 3, 3003 Bern'],
+    'HausNr': ['10', '3']
+})
+
+# Map addresses to EGID
+df_result = get_egid_from_address(df, col_house_no='HausNr')
+
+print(df_result[['address', 'EGID', 'EGID map', 'EGID note']])
+```
+
+## Key Features
+
+```{admonition} What's New
+:class: tip
+- Support for batch address processing
+- Enhanced error handling and logging
+- Detailed mapping notes for each result
+```
+
+## Navigation
+
+Use the sidebar to navigate through the documentation:
+
+- **Installation**: How to install the package
+- **Usage**: Detailed usage examples
+- **API Reference**: Complete API documentation
+- **Examples**: Real-world examples and use cases
+
+## About
+
+This project is maintained by [BartonChenTW](https://github.com/BartonChenTW) and is available under the MIT License.
+
+```{tableofcontents}
+```
