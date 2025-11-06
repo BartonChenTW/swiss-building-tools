@@ -38,7 +38,7 @@ This page provides detailed documentation for all functions in the Swiss Address
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 df = pd.DataFrame({
     'address': ['Bahnhofstrasse 10, 8001 Zürich'],
@@ -71,7 +71,7 @@ print(df_result[['address', 'EGID', 'EGID map']])
 **Example:**
 
 ```python
-from swiss_address_tools import get_bldg_attrs_from_address
+from swiss_building_tools import get_bldg_attrs_from_address
 
 results = get_bldg_attrs_from_address("Bahnhofstrasse 10, 8001 Zürich")
 if results:
@@ -122,7 +122,7 @@ if results:
 **Example:**
 
 ```python
-from swiss_address_tools import expand_egid_to_rows
+from swiss_building_tools import expand_egid_to_rows
 import pandas as pd
 
 df = pd.DataFrame({
@@ -176,7 +176,7 @@ print(len(df_expanded))  # Output: 3 rows
 **Example:**
 
 ```python
-from swiss_address_tools import expand_house_number_ranges
+from swiss_building_tools import expand_house_number_ranges
 
 # Expand a range
 result = expand_house_number_ranges("1-5, 10, 20-22")
