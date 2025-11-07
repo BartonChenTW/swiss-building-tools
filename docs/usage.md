@@ -7,7 +7,7 @@ This guide provides detailed information on how to use Swiss Address Tools.
 ### Import the Package
 
 ```python
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 import pandas as pd
 ```
 
@@ -32,24 +32,24 @@ df = pd.DataFrame({
 # Basic usage
 result = get_egid_from_address(df, col_house_no='house_number')
 
-# Display results
-print(result[['address', 'EGID', 'EGID map', 'EGID note']])
+# Display results (EGIDs are in 'EGID list')
+print(result[['address', 'EGID list', 'EGID map', 'EGID note']])
 ```
 
 ## Understanding the Results
 
 The function returns a DataFrame with additional columns:
 
-- **EGID**: The Federal Building Identifier (if found)
-- **EGID map**: Boolean indicating if mapping was successful
+- **EGID list**: Semicolon/comma-separated list of EGIDs found for the input address/house numbers
+- **EGID map**: Mapping summary in format `input_count:egid_count` (e.g., `1:1`, `2:3`)
 - **EGID note**: Detailed notes about the mapping process
 
 ### Result Columns
 
 | Column | Type | Description |
 |--------|------|-------------|
-| EGID | str | Federal Building Identifier |
-| EGID map | bool | True if mapping successful |
+| EGID list | str | One or multiple EGIDs separated by `;` or `,` |
+| EGID map | str | Mapping ratio `source_addresses:egids_found` |
 | EGID note | str | Details about the mapping |
 
 ## Advanced Usage
@@ -117,7 +117,7 @@ Here's a complete example workflow:
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 # 1. Load your data
 df = pd.read_csv('addresses.csv')
@@ -125,12 +125,11 @@ df = pd.read_csv('addresses.csv')
 # 2. Map addresses to EGID
 df_result = get_egid_from_address(df, col_house_no='HausNr')
 
-# 3. Filter successful mappings
-successful = df_result[df_result['EGID map'] == True]
-print(f"Successfully mapped {len(successful)} addresses")
+# 3. Inspect mapping summary
+print(df_result[['address','HausNr','EGID list','EGID map']].head())
 
-# 4. Analyze failures
-failed = df_result[df_result['EGID map'] == False]
+# 4. Analyze failures (rows with no EGIDs)
+failed = df_result[df_result['EGID list'] == '']
 print(f"Failed to map {len(failed)} addresses")
 print(failed[['address', 'EGID note']])
 

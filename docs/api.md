@@ -29,7 +29,7 @@ This page provides detailed documentation for all functions in the Swiss Address
    :type exact_match: bool
    :param fuzzy_match: Try fuzzy matching if exact match fails (default: True)
    :type fuzzy_match: bool
-   :return: Dataframe with added columns: 'EGID', 'EGID map', 'EGID note'
+   :return: Dataframe with added columns: 'EGID list', 'EGID map', 'EGID note'
    :rtype: pandas.DataFrame
    :raises ValueError: If required columns are not found in the dataframe
 ```
@@ -46,7 +46,7 @@ df = pd.DataFrame({
 })
 
 df_result = get_egid_from_address(df)
-print(df_result[['address', 'EGID', 'EGID map']])
+print(df_result[['address', 'EGID list', 'EGID map']])
 ```
 
 ---
@@ -105,16 +105,16 @@ if results:
 ### expand_egid_to_rows
 
 ```{eval-rst}
-.. function:: expand_egid_to_rows(df_data, egid_col='EGID list', max_egid_count=20)
+.. function:: expand_egid_to_rows(df_data, col_egid='EGID list', cols_divider=[''])
 
    Expand rows with multiple EGIDs into separate rows per EGID.
    
    :param df_data: Input dataframe with comma-separated EGID list
    :type df_data: pandas.DataFrame
-   :param egid_col: Column name containing comma-separated EGIDs (default: 'EGID list')
-   :type egid_col: str
-   :param max_egid_count: Maximum number of EGIDs to process (default: 20)
-   :type max_egid_count: int
+   :param col_egid: Column name containing the EGID list (default: 'EGID list')
+   :type col_egid: str
+   :param cols_divider: Numeric columns to divide proportionally among expanded EGIDs
+   :type cols_divider: list
    :return: Expanded dataframe with one row per EGID
    :rtype: pandas.DataFrame
 ```
@@ -199,7 +199,7 @@ When using `get_egid_from_address()`, the following columns are added to your Da
 
 | Column Name | Type | Description |
 |-------------|------|-------------|
-| `EGID` | str | Federal Building Identifier(s). Multiple EGIDs are separated by ';' |
+| `EGID list` | str | One or multiple EGIDs separated by ';' or ',' |
 | `EGID map` | str | Mapping ratio in format "input:output" (e.g., "1:1", "2:3") |
 | `EGID note` | str | Detailed notes about the mapping process, including house numbers and any issues |
 

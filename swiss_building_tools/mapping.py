@@ -137,7 +137,7 @@ def get_egid_from_address(
     df_data = df_data_raw.copy()
 
     # Add result columns
-    for col in ['EGID', 'EGID map', 'EGID note']:
+    for col in ['EGID list', 'EGID map', 'EGID note']:
         if col not in df_data.columns:
             df_data[col] = ''
 
@@ -191,7 +191,7 @@ def get_egid_from_address(
                     egid_note += 'Fuzzy match. '
 
             # Store results
-            df_data.at[indx, 'EGID'] += li2str(li_egid) + '; '
+            df_data.at[indx, 'EGID list'] += li2str(li_egid) + '; '
             egid_cnt += len(li_egid)
 
             egid_note += 'HausNr: ' + li2str(li_house_no, ', ')
@@ -201,7 +201,7 @@ def get_egid_from_address(
             df_data.at[indx, 'EGID note'] += egid_note + '; '
 
         df_data.at[indx, 'EGID map'] = f'{len(di_no2address)}:{egid_cnt}'
-        df_data.at[indx, 'EGID'] = df_data.at[indx, 'EGID'][:-2]  # Remove last '; '
+        df_data.at[indx, 'EGID list'] = df_data.at[indx, 'EGID list'][:-2]  # Remove last '; '
         df_data.at[indx, 'EGID note'] = df_data.at[indx, 'EGID note'][:-2]
 
     return df_data
@@ -209,8 +209,8 @@ def get_egid_from_address(
 
 def expand_egid_to_rows(
     df_data: pd.DataFrame,
-    egid_col: str = 'EGID list',
-    max_egid_count: int = 20
+    col_egid: str = 'EGID list',
+    cols_divider: list[str] = [''],
 ) -> pd.DataFrame:
     """
     Expand rows with multiple EGIDs into separate rows per EGID.
@@ -231,17 +231,29 @@ def expand_egid_to_rows(
         >>> df_expanded = expand_egid_to_rows(df)
         >>> print(len(df_expanded))  # 3 rows
     """
-    # Filter out rows with too many EGIDs
-    df_filtered = df_data[df_data[egid_col].str.count(',') < max_egid_count].copy()
-    
+   
     df_egid = pd.DataFrame()
 
-    for indx in df_filtered.index:
-        li_egid = df_filtered.at[indx, egid_col].split(',')
+    # check if cols_divider is in the columns
+    cols_divider = [col for col in cols_divider if col in df_data.columns]
+
+    for indx in df_data.index:
+        # Split EGID list by both ',' and '; '
+        egid_string = df_data.at[indx, col_egid]
+        egid_string = egid_string.replace('; ', ',')
+        li_egid = egid_string.split(',')
+        li_egid = [egid for egid in li_egid if egid!='']
 
         for egid in li_egid:
-            row_data = df_filtered.loc[indx].to_dict()
+            row_data = df_data.loc[indx].to_dict()
             row_data['EGID'] = egid.strip()
+
+            for col in cols_divider:
+                try:
+                    row_data[col] = row_data[col] / len(li_egid)
+                except:
+                    print(f'Warning: Could not divide column "{col}" by {len(li_egid)}')
+
             df_egid = pd.concat([df_egid, pd.DataFrame([row_data])], ignore_index=True)
 
     return df_egid

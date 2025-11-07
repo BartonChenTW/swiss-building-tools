@@ -28,7 +28,8 @@ df = pd.DataFrame({
 # Map addresses to EGID
 df_result = get_egid_from_address(df, col_house_no='HausNr')
 
-print(df_result[['address', 'EGID', 'EGID map', 'EGID note']])
+# Note: The EGIDs are returned in column 'EGID list' (semicolon/comma-separated)
+print(df_result[['address', 'EGID list', 'EGID map', 'EGID note']])
 ```
 
 ## Features
@@ -46,6 +47,9 @@ print(df_result[['address', 'EGID', 'EGID map', 'EGID note']])
 - `expand_house_number_ranges()` - Expand house number ranges
 - `process_expand_house_numbers()` - Process DataFrame with house number expansion
 - `get_df_by_key()` - Aggregate data by key with sum, average, join, and more
+
+### Tip: One EGID per row
+If you need one row per EGID, use `expand_egid_to_rows(df_result)` to expand the `'EGID list'` column into separate rows.
 
 ## License
 

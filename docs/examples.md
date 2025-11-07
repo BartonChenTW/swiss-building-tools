@@ -8,7 +8,7 @@ Map a simple list of addresses to their EGIDs:
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 # Create sample data
 df = pd.DataFrame({
@@ -24,7 +24,7 @@ df = pd.DataFrame({
 result = get_egid_from_address(df, col_house_no='house_no')
 
 # Display results
-print(result[['address', 'EGID', 'EGID map', 'EGID note']])
+print(result[['address', 'EGID list', 'EGID map', 'EGID note']])
 ```
 
 ---
@@ -35,7 +35,7 @@ Process addresses with multiple house numbers (e.g., buildings that span multipl
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 # Addresses with multiple house numbers
 df = pd.DataFrame({
@@ -54,7 +54,7 @@ result = get_egid_from_address(
     separators=['/', ',', '-']
 )
 
-print(result[['address', 'EGID', 'EGID map']])
+print(result[['address', 'EGID list', 'EGID map']])
 ```
 
 ---
@@ -65,7 +65,7 @@ Load addresses from a CSV file, process them, and save results:
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 # Load data from CSV
 df = pd.read_csv('input_addresses.csv')
@@ -97,7 +97,7 @@ Use fuzzy matching when exact matches fail:
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 df = pd.DataFrame({
     'address': [
@@ -128,7 +128,7 @@ Convert rows with multiple EGIDs into separate rows:
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address, expand_egid_to_rows
+from swiss_building_tools import get_egid_from_address, expand_egid_to_rows
 
 # Get addresses with multiple EGIDs
 df = pd.DataFrame({
@@ -138,12 +138,8 @@ df = pd.DataFrame({
 
 result = get_egid_from_address(df, col_house_no='house_no')
 
-# Some addresses may return multiple EGIDs (e.g., 17a, 17b, 17c)
-# Rename column for expansion
-result['EGID list'] = result['EGID']
-
-# Expand to one row per EGID
-expanded = expand_egid_to_rows(result, egid_col='EGID list')
+# Expand to one row per EGID directly (uses 'EGID list')
+expanded = expand_egid_to_rows(result)
 
 print(f"Original rows: {len(result)}")
 print(f"Expanded rows: {len(expanded)}")
@@ -157,7 +153,7 @@ Analyze failed mappings to understand issues:
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 df = pd.read_csv('addresses.csv')
 
@@ -218,7 +214,7 @@ df_final.to_csv('all_results.csv', index=False)
 For more control, use the low-level API functions directly:
 
 ```python
-from swiss_address_tools import (
+from swiss_building_tools import (
     get_bldg_attrs_from_address,
     get_egid_house_no_from_request
 )
@@ -257,14 +253,14 @@ Combine with GeoPandas for spatial analysis:
 ```python
 import pandas as pd
 import geopandas as gpd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 # Map addresses to EGID
 df = pd.read_csv('addresses.csv')
 df_result = get_egid_from_address(df, col_house_no='house_no')
 
 # Filter successful mappings
-df_mapped = df_result[~df_result['EGID'].str.startswith('')]
+df_mapped = df_result[df_result['EGID list'] != '']
 
 # Now you can use EGID to join with building geometry data
 # from Swiss Federal Geodata (e.g., GWR - Gebäude- und Wohnungsregister)
@@ -279,7 +275,7 @@ print("EGIDs can now be used to join with building geometry data")
 Use the `expand_house_number_ranges` utility function to expand house number ranges:
 
 ```python
-from swiss_address_tools import expand_house_number_ranges
+from swiss_building_tools import expand_house_number_ranges
 
 # Expand simple range
 result = expand_house_number_ranges("1-5")

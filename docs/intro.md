@@ -1,10 +1,10 @@
-# Swiss Address Tools Documentation
+# Swiss Building Tools Documentation
 
-Welcome to the Swiss Address Tools documentation! This package provides tools for mapping Swiss addresses to EGID (Federal Building Identifier) using the GeoAdmin API.
+Welcome to the Swiss Building Tools documentation! This package provides tools for mapping Swiss addresses to EGID (Federal Building Identifier) using the GeoAdmin API.
 
 ## Overview
 
-Swiss Address Tools is a Python library that helps you:
+Swiss Building Tools is a Python library that helps you:
 
 - **Map Swiss postal addresses to EGID**: Convert addresses to Federal Building Identifiers
 - **Handle complex address formats**: Support for multiple house numbers (e.g., "10/12" or "10, 12")
@@ -15,7 +15,7 @@ Swiss Address Tools is a Python library that helps you:
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 
 # Prepare your data
 df = pd.DataFrame({
@@ -26,7 +26,7 @@ df = pd.DataFrame({
 # Map addresses to EGID
 df_result = get_egid_from_address(df, col_house_no='HausNr')
 
-print(df_result[['address', 'EGID', 'EGID map', 'EGID note']])
+print(df_result[['address', 'EGID list', 'EGID map', 'EGID note']])
 ```
 
 ## Key Features
