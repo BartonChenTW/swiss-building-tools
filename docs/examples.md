@@ -1,6 +1,6 @@
 # Examples
 
-This page provides real-world examples and use cases for Swiss Address Tools.
+This page provides real-world examples and use cases for Swiss Building Tools.
 
 ## Example 1: Basic Address Mapping
 

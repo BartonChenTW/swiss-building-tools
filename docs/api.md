@@ -1,6 +1,6 @@
 # API Reference
 
-This page provides detailed documentation for all functions in the Swiss Address Tools package.
+This page provides detailed documentation for all functions in the Swiss Building Tools package.
 
 ## Main Functions
 

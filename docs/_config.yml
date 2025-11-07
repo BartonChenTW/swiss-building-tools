@@ -1,5 +1,5 @@
 # Book settings
-title: Swiss Address Tools
+title: Swiss Building Tools
 author: BartonChenTW
 copyright: "2025"
 logo: ""
@@ -13,7 +13,7 @@ execute:
 # Define the name of the latex output file for PDF builds
 latex:
   latex_documents:
-    targetname: swiss-address-tools.tex
+    targetname: swiss-building-tools.tex
 
 # Add a bibtex file so that we can create citations
 bibtex_bibfiles:

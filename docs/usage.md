@@ -1,6 +1,6 @@
 # Usage Guide
 
-This guide provides detailed information on how to use Swiss Address Tools.
+This guide provides detailed information on how to use Swiss Building Tools.
 
 ## Basic Usage
 
