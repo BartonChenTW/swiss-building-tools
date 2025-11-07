@@ -33,10 +33,19 @@ print(df_result[['address', 'EGID', 'EGID map', 'EGID note']])
 
 ## Features
 
-- Map Swiss postal addresses to EGID
-- Handle multiple house numbers (e.g., "10/12" or "10, 12")
-- Exact and fuzzy matching options
-- Detailed mapping notes for troubleshooting
+- **Address to EGID Mapping**: Map Swiss postal addresses to Federal Building Identifiers (EGID)
+- **Multiple House Numbers**: Handle complex formats (e.g., "10/12", "10, 12", "1-5")
+- **House Number Range Expansion**: Expand ranges like "1-5" into individual numbers [1, 2, 3, 4, 5]
+- **Data Aggregation**: Group and aggregate building data by EGID with various statistics
+- **Matching Options**: Support for exact and fuzzy matching
+- **Detailed Logging**: Comprehensive mapping notes for troubleshooting
+
+## Key Functions
+
+- `get_egid_from_address()` - Map addresses to EGID using GeoAdmin API
+- `expand_house_number_ranges()` - Expand house number ranges
+- `process_expand_house_numbers()` - Process DataFrame with house number expansion
+- `get_df_by_key()` - Aggregate data by key with sum, average, join, and more
 
 ## License
 

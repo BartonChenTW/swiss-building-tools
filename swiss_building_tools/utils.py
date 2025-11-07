@@ -16,7 +16,8 @@ def li2str(li, sep=','):
     return sep.join([str(item) for item in li])
 
 
-def get_df_by_key(df_data, label, by='EGID', col_sum=[], col_avg=[], col_join=[], col_first=[], col_unique=[], col_max=[]):
+def get_df_by_key(df_data, label, by='EGID', separate=',',
+                  col_sum=[], col_avg=[], col_join=[], col_first=[], col_unique=[], col_max=[]):
     '''get a 'groupby' dataframe by key columns (e.g. EGID) with different groupby function:
 
     input
@@ -59,14 +60,8 @@ def get_df_by_key(df_data, label, by='EGID', col_sum=[], col_avg=[], col_join=[]
     # add join strings 
     for col in col_join:
 
-        df_join = df_data.groupby(by=by)[col].apply(lambda x: ', '.join(map(str, x))).to_frame()
+        df_join = df_data.groupby(by=by)[col].apply(lambda x: separate.join(map(str, x))).to_frame()
         df_return[f'join.{col}'] = df_join[col]
-
-        # df_return[f'join.{col}'] = ''
-
-        # for indx_return in df_return.index:
-        #     li_values = df_data[df_data[by] == indx_return][col].tolist()
-        #     df_return.at[indx_return, f'join.{col}'] = '; '.join(map(str, li_values))
 
     # get data in first row 
     df_first = df_data.drop_duplicates(by)
@@ -82,19 +77,19 @@ def get_df_by_key(df_data, label, by='EGID', col_sum=[], col_avg=[], col_join=[]
     return df_return
 
 
-def expand_house_number_ranges(house_no_str, separator=',', step=2):
+def expand_house_number_ranges(house_no_str, split_char=',', step=2) -> list[str]:
     """Expand house number ranges in a string.
 
     Args:
         house_no_str (str): A string containing house numbers and ranges.
-        separator (str): The separator used to split house numbers.
+        split_char (str): The split_char used to split house numbers.
         step (int): The step value for ranges (default is 2 for even/odd).
 
     Returns:
         list: A list of individual house numbers as strings.
     """
     house_numbers = []
-    parts = house_no_str.split(separator)
+    parts = house_no_str.split(split_char)
 
     for part in parts:
         part = part.strip()
@@ -108,5 +103,28 @@ def expand_house_number_ranges(house_no_str, separator=',', step=2):
                 print('Warning: Non-integer house number range encountered:', part)
 
         house_numbers.append(part)
+    
+    print(f'Expanded "{house_no_str}" to {house_numbers}')
 
     return house_numbers
+
+
+def process_expand_house_numbers(df_data, col_house_no, separator='/', range_sign='-'):
+    '''
+    Process dataframe to expand house number ranges in a specified column.
+    Args:
+        df_data: Input dataframe
+        col_house_no: Column name containing house numbers to expand
+        separator: Separator for expanded house numbers (e.g., '/')
+        range_sign: Sign indicating a range in house numbers (e.g., '-')
+    '''
+
+    df = df_data[df_data[col_house_no].str.contains(range_sign)]
+
+    for indx in df.index:
+        row = df.loc[indx]
+        expanded_numbers = expand_house_number_ranges(row[col_house_no], split_char='/')
+        df_data.at[indx, col_house_no + '_raw'] = row[col_house_no]
+        df_data.at[indx, col_house_no] = separator.join(expanded_numbers)
+
+    return df_data

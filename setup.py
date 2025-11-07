@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="swiss-building-tools",
-    version="0.1.2",
+    version="0.1.3",
     author="Barton Chen",
     author_email="barton.chen.energy@gmail.com",
     description="Tools for processing Swiss building data",
