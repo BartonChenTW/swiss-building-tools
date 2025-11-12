@@ -191,6 +191,156 @@ print(result)
 
 ---
 
+### get_df_by_key
+
+```{eval-rst}
+.. function:: get_df_by_key(df_data, label, by='EGID', separate=';', col_sum=[], col_avg=[], col_join=[], col_first=[], col_unique=[], col_max=[])
+
+   Aggregate a dataframe by key column with various groupby operations.
+   
+   This function groups data by a key column (e.g., EGID) and applies different aggregation
+   functions to specified columns: sum, average, join (concatenate), first value, unique values, and max.
+   
+   :param df_data: Input dataframe to aggregate
+   :type df_data: pandas.DataFrame
+   :param label: Label to use in the count column name (e.g., 'dist_heat', 'PV')
+   :type label: str
+   :param by: Column name to group by (default: 'EGID')
+   :type by: str
+   :param separate: Separator for joined string values (default: ';')
+   :type separate: str
+   :param col_sum: List of columns to sum
+   :type col_sum: list
+   :param col_avg: List of columns to average
+   :type col_avg: list
+   :param col_join: List of columns to concatenate as strings
+   :type col_join: list
+   :param col_first: List of columns to take first value
+   :type col_first: list
+   :param col_unique: List of columns to get unique values
+   :type col_unique: list
+   :param col_max: List of columns to get maximum value
+   :type col_max: list
+   :return: Aggregated dataframe with the key as index
+   :rtype: pandas.DataFrame
+```
+
+**Example:**
+
+```python
+from swiss_building_tools import get_df_by_key
+import pandas as pd
+
+df = pd.DataFrame({
+    'EGID': [123, 123, 456, 456],
+    'energy': [100, 150, 200, 250],
+    'type': ['solar', 'wind', 'solar', 'solar'],
+    'year': [2020, 2021, 2020, 2021]
+})
+
+# Aggregate by EGID
+result = get_df_by_key(
+    df, 
+    label='renewables',
+    by='EGID',
+    col_sum=['energy'],
+    col_join=['type'],
+    col_max=['year']
+)
+print(result)
+# Output shows aggregated data with count, sum of energy, joined types, and max year
+```
+
+---
+
+### process_expand_house_numbers
+
+```{eval-rst}
+.. function:: process_expand_house_numbers(df_data, col_house_no, separator='/', range_sign='-')
+
+   Process a dataframe to expand house number ranges in a specified column.
+   
+   This function finds rows containing range indicators (e.g., '-') in house numbers
+   and expands them. The original value is preserved in a new column with '_raw' suffix.
+   
+   :param df_data: Input dataframe with house numbers
+   :type df_data: pandas.DataFrame
+   :param col_house_no: Column name containing house numbers to expand
+   :type col_house_no: str
+   :param separator: Separator to use for expanded house numbers (default: '/')
+   :type separator: str
+   :param range_sign: Character indicating a range (default: '-')
+   :type range_sign: str
+   :return: Dataframe with expanded house numbers
+   :rtype: pandas.DataFrame
+```
+
+**Example:**
+
+```python
+from swiss_building_tools import process_expand_house_numbers
+import pandas as pd
+
+df = pd.DataFrame({
+    'address': ['Main St', 'Oak Ave'],
+    'house_no': ['10-12', '5']
+})
+
+result = process_expand_house_numbers(df, col_house_no='house_no')
+print(result)
+# house_no column: '10/11/12' for first row, '5' for second
+# house_no_raw column: '10-12' (original value preserved)
+```
+
+---
+
+## Data Aggregation Classes
+
+### DataAggregator
+
+```{eval-rst}
+.. class:: DataAggregator(index_name='EGID', index_type=int)
+
+   A class for aggregating multiple datasets by a common index (e.g., EGID).
+   
+   This class manages loading, merging, and spatially joining datasets into a single
+   aggregated dataframe. It supports both index-based merging and spatial geometry-based joins.
+   
+   :param index_name: Name of the index column (default: 'EGID')
+   :type index_name: str
+   :param index_type: Data type of the index (default: int)
+   :type index_type: type
+```
+
+**Methods:**
+
+- `add_dataset(dataset_name, path, description, override=True, **kwargs)` - Load a dataset from file
+- `merge_dataset_by_index(dataset_name, header_index=None)` - Merge dataset using index column
+- `merge_dataset_by_geometry(dataset_name, header_geometry='geometry', header_point='geometry', method='search')` - Spatial join using geometries
+
+**Example:**
+
+```python
+from swiss_building_tools import DataAggregator
+
+# Initialize aggregator
+agg = DataAggregator(index_name='EGID', index_type=int)
+
+# Add datasets
+agg.add_dataset('buildings', 'buildings.csv', 'Building data')
+agg.add_dataset('energy', 'energy.parquet', 'Energy consumption')
+
+# Merge by EGID
+agg.merge_dataset_by_index('buildings')
+agg.merge_dataset_by_index('energy')
+
+# Access aggregated data
+print(agg.aggregated_data.head())
+print(f"Total rows: {len(agg.aggregated_data)}")
+```
+
+---
+
 ## Data Structures
 
 ### Result Columns
