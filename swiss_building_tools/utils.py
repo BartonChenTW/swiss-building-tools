@@ -16,7 +16,7 @@ def li2str(li, sep=','):
     return sep.join([str(item) for item in li])
 
 
-def get_df_by_key(df_data, label, by='EGID', separate=',',
+def get_df_by_key(df_data, label, by='EGID', separate=';',
                   col_sum=[], col_avg=[], col_join=[], col_first=[], col_unique=[], col_max=[]):
     '''get a 'groupby' dataframe by key columns (e.g. EGID) with different groupby function:
 
@@ -71,7 +71,7 @@ def get_df_by_key(df_data, label, by='EGID', separate=',',
 
     # add unique values
     for col in col_unique:
-        df_unique = df_data.groupby(by=by)[col].apply(lambda x: ', '.join(map(str, x.unique()))).to_frame()
+        df_unique = df_data.groupby(by=by)[col].apply(lambda x: separate.join(map(str, x.unique()))).to_frame()
         df_return[f'unique.{col}'] = df_unique[col]
         
     return df_return

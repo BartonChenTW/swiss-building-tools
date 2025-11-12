@@ -247,6 +247,7 @@ def expand_egid_to_rows(
         for egid in li_egid:
             row_data = df_data.loc[indx].to_dict()
             row_data['EGID'] = egid.strip()
+            row_data['EGID_count'] = len(li_egid)
 
             for col in cols_divider:
                 try:
@@ -255,5 +256,11 @@ def expand_egid_to_rows(
                     print(f'Warning: Could not divide column "{col}" by {len(li_egid)}')
 
             df_egid = pd.concat([df_egid, pd.DataFrame([row_data])], ignore_index=True)
+
+    # move column 'EGID' and 'EGID_count' to the front
+    cols = df_egid.columns.tolist()
+    cols.insert(0, cols.pop(cols.index('EGID')))
+    cols.insert(1, cols.pop(cols.index('EGID_count')))
+    df_egid = df_egid[cols]
 
     return df_egid
