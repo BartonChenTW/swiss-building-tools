@@ -181,7 +181,7 @@ Process large datasets with progress tracking:
 
 ```python
 import pandas as pd
-from swiss_address_tools import get_egid_from_address
+from swiss_building_tools import get_egid_from_address
 import time
 
 # Load large dataset

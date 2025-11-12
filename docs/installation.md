@@ -44,8 +44,8 @@ pip install -e .
 After installation, verify that the package is correctly installed:
 
 ```python
-import swiss_address_tools
-print(swiss_address_tools.__version__)
+import swiss_building_tools
+print(swiss_building_tools.__version__)
 ```
 
 ## Dependencies

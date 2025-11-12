@@ -9,6 +9,7 @@ from .mapping import (
     expand_egid_to_rows
 )
 from .utils import li2str, expand_house_number_ranges, get_df_by_key, process_expand_house_numbers
+from .aggregating import DataAggregator
 
 __all__ = [
     'get_bldg_attrs_from_address',
@@ -19,4 +20,5 @@ __all__ = [
     'expand_house_number_ranges',
     'get_df_by_key',
     'process_expand_house_numbers',
+    'DataAggregator'
 ]
