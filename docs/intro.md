@@ -10,6 +10,18 @@ Swiss Building Tools is a Python library that helps you:
 - **Handle complex address formats**: Support for multiple house numbers (e.g., "10/12" or "10, 12")
 - **Flexible matching options**: Both exact and fuzzy matching capabilities
 - **Detailed mapping notes**: Comprehensive feedback for troubleshooting
+- **Rooftop PV analysis**: Work with Swiss rooftop photovoltaic data and solar irradiance profiles
+
+## Modules
+
+### swiss_building_tools
+Core functionality for address mapping, data aggregation, and utilities.
+
+### swiss_pv
+Specialized tools for working with Swiss rooftop photovoltaic (PV) datasets, including:
+- Classification of roof tilt and aspect angles
+- Integration with hourly solar irradiance data
+- Support for research datasets from EPFL and Zenodo
 
 ## Quick Start
 

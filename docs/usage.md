@@ -137,6 +137,51 @@ print(failed[['address', 'EGID note']])
 df_result.to_csv('addresses_with_egid.csv', index=False)
 ```
 
+## Working with Swiss PV Data
+
+The `swiss_pv` module provides tools for working with rooftop photovoltaic datasets.
+
+### Basic PV Workflow
+
+```python
+from swiss_building_tools import get_egid_from_address
+from swiss_pv import get_roof_aspect_tilt_classes
+import pandas as pd
+
+# 1. Get EGID for your buildings
+df_addresses = pd.DataFrame({
+    'address': ['Gernstrasse 1, 8311 Brütten'],
+    'house_no': ['1']
+})
+df_egid = get_egid_from_address(df_addresses, col_house_no='house_no')
+
+# 2. Load roof data (from Swiss rooftop datasets)
+df_roofs = pd.read_csv('rooftop_data.csv')  # Contains ROOF_TILT, ROOF_ASPECT
+df_roofs = df_roofs[df_roofs['EGID'].isin(df_egid['EGID list'].str.split(';'))]
+
+# 3. Classify roof geometry
+df_classified = get_roof_aspect_tilt_classes(df_roofs)
+print(df_classified[['EGID', 'ROOF_TILT_CLASS', 'ROOF_ASPECT_CLASS', 'ROOF_AREA']])
+```
+
+### Understanding Roof Classifications
+
+The `get_roof_aspect_tilt_classes()` function converts continuous roof measurements into discrete classes:
+
+**Tilt Classes** (degrees from horizontal):
+- 0°, 10°, 20°, 30°, 40°, 50°
+
+**Aspect Classes** (orientation):
+- N (North), E (East), SE (Southeast), S (South), SW (Southwest), W (West), flat
+
+These classes match the format used in published Swiss solar irradiance datasets, allowing you to link roof geometry to hourly generation profiles.
+
+### Data Sources
+
+Compatible with these public datasets:
+- [Global tilted radiation on Swiss rooftops (2016)](https://zenodo.org/records/4770483) - Hourly irradiance by municipality
+- [Rooftop PV potential data](https://zenodo.org/records/3609833) - Roof geometry linked to EGID
+
 ## Next Steps
 
 - Check the [API Reference](api.md) for detailed function documentation

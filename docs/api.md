@@ -369,6 +369,86 @@ The GeoAdmin API returns results with the following structure:
 
 ---
 
+## Swiss PV Module
+
+The `swiss_pv` module provides functions for working with Swiss rooftop photovoltaic (PV) data, including mapping roof characteristics to standardized classes used in solar irradiance datasets.
+
+### get_roof_aspect_tilt_classes
+
+```{eval-rst}
+.. function:: get_roof_aspect_tilt_classes(df_roof)
+
+   Convert continuous roof tilt and aspect values into standardized classes.
+   
+   This function maps raw roof measurements (ROOF_TILT in degrees, ROOF_ASPECT in degrees from south)
+   to the classification system used in Swiss rooftop PV datasets:
+   
+   - **Tilt classes**: 0°, 10°, 20°, 30°, 40°, 50°
+   - **Aspect classes**: 'N', 'E', 'SE', 'S', 'SW', 'W', 'flat'
+   
+   Flat roofs (tilt class 0) are automatically assigned aspect class 'flat'.
+   
+   :param df_roof: Dataframe with 'ROOF_TILT' and 'ROOF_ASPECT' columns
+   :type df_roof: pandas.DataFrame
+   :return: Dataframe with added 'ROOF_TILT_CLASS' and 'ROOF_ASPECT_CLASS' columns
+   :rtype: pandas.DataFrame
+   :raises KeyError: If required columns 'ROOF_TILT' or 'ROOF_ASPECT' are missing
+```
+
+**Example:**
+
+```python
+import pandas as pd
+from swiss_pv import get_roof_aspect_tilt_classes
+
+# Sample roof data
+df = pd.DataFrame({
+    'EGID': [123456, 789012],
+    'ROOF_TILT': [25.3, 5.2],      # degrees
+    'ROOF_ASPECT': [180.5, 90.0]   # degrees from south
+})
+
+# Convert to classes
+df_result = get_roof_aspect_tilt_classes(df)
+print(df_result[['EGID', 'ROOF_TILT', 'ROOF_TILT_CLASS', 
+                 'ROOF_ASPECT', 'ROOF_ASPECT_CLASS']])
+# Output:
+#    EGID  ROOF_TILT  ROOF_TILT_CLASS  ROOF_ASPECT ROOF_ASPECT_CLASS
+# 0  123456      25.3               20        180.5                S
+# 1  789012       5.2                0         90.0             flat
+```
+
+**Classification Rules:**
+
+Tilt Classes:
+- 0°: [0, 5)
+- 10°: [5, 15)
+- 20°: [15, 25)
+- 30°: [25, 35)
+- 40°: [35, 45)
+- 50°: [45+)
+
+Aspect Classes (clockwise from south):
+- S: [165, 195) and [345, 15)
+- SW: [195, 255)
+- W: [255, 285)
+- N: [285, 345) and [15, 75)
+- E: [75, 105)
+- SE: [105, 165)
+- flat: tilt = 0°
+
+**Data Sources:**
+
+This function is designed to work with Swiss rooftop PV datasets:
+- [Global tilted radiation on Swiss rooftops (2016)](https://zenodo.org/records/4770483)
+- [Rooftop photovoltaic (PV) potential data](https://zenodo.org/records/3609833)
+
+**Reference:**
+
+Walch, A., et al. (2020). "Big data mining for the estimation of hourly rooftop photovoltaic potential and its uncertainty." *Applied Energy*, 262, 114404. [DOI: 10.1016/j.apenergy.2019.114404](https://doi.org/10.1016/j.apenergy.2019.114404)
+
+---
+
 ## Error Handling
 
 All functions include error handling. Common exceptions:

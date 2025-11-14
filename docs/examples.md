@@ -304,6 +304,89 @@ for address in addresses_with_ranges:
 
 ---
 
+## Example 11: Working with Swiss Rooftop PV Data
+
+Extract hourly PV generation profiles for Swiss buildings using the `swiss_pv` module.
+
+```python
+import pandas as pd
+from swiss_building_tools import get_egid_from_address, get_df_by_key
+from swiss_pv import get_roof_aspect_tilt_classes
+
+# Step 1: Get building EGID from address
+addresses = pd.DataFrame({
+    'street': ['Gernstrasse'],
+    'house_no': ['1'],
+    'postal_code': ['8311'],
+    'municipality': ['Brütten']
+})
+
+# Create full address string
+addresses['address'] = (addresses['street'] + ' ' + 
+                        addresses['house_no'] + ', ' + 
+                        addresses['postal_code'] + ' ' + 
+                        addresses['municipality'])
+
+# Map to EGID
+df_egid = get_egid_from_address(addresses, col_house_no='house_no')
+print(f"Found EGID: {df_egid['EGID list'].iloc[0]}")
+
+# Step 2: Load roof information for the EGID
+# (Assuming you have rooftop data from Zenodo)
+df_roofs = pd.read_csv('rooftop_link_info.csv')
+df_roofs = df_roofs[df_roofs['EGID'].isin(df_egid['EGID list'].str.split(';').explode())]
+
+# Step 3: Convert roof measurements to classes
+df_roofs_classified = get_roof_aspect_tilt_classes(df_roofs)
+
+print("\nRoof classifications:")
+print(df_roofs_classified[['EGID', 'ROOF_TILT', 'ROOF_TILT_CLASS', 
+                            'ROOF_ASPECT', 'ROOF_ASPECT_CLASS', 'ROOF_AREA']])
+
+# Step 4: Aggregate roof areas by classification
+df_aggregated = get_df_by_key(
+    df_roofs_classified,
+    label='roof',
+    by=['EGID', 'ROOF_ASPECT_CLASS', 'ROOF_TILT_CLASS'],
+    col_sum=['ROOF_AREA']
+)
+
+print("\nAggregated roof areas by class:")
+print(df_aggregated)
+```
+
+**Expected Output:**
+
+```
+Found EGID: 123456
+
+Roof classifications:
+   EGID  ROOF_TILT  ROOF_TILT_CLASS  ROOF_ASPECT ROOF_ASPECT_CLASS  ROOF_AREA
+0  123456      28.5               30        180.0                 S      125.3
+1  123456      27.2               20        185.5                 S       98.7
+
+Aggregated roof areas by class:
+                                        roof_count  ROOF_AREA_sum
+EGID   ROOF_ASPECT_CLASS ROOF_TILT_CLASS                        
+123456 S                 20                      1          98.7
+                         30                      1         125.3
+```
+
+**Use Case:** This workflow enables you to:
+1. Match addresses to building IDs (EGID)
+2. Link buildings to their detailed roof geometry
+3. Convert continuous roof measurements to discrete classes
+4. Aggregate roof areas by orientation and tilt
+5. Match these classes to hourly solar irradiance profiles from research datasets
+
+**Data Sources:**
+- [Global tilted radiation on Swiss rooftops (2016)](https://zenodo.org/records/4770483) - Hourly irradiance by municipality, aspect, and tilt
+- [Rooftop PV potential data](https://zenodo.org/records/3609833) - Roof geometry linked to EGID
+
+**Reference:** Walch, A., et al. (2020). "Big data mining for the estimation of hourly rooftop photovoltaic potential and its uncertainty." *Applied Energy*, 262, 114404.
+
+---
+
 ## Tips and Best Practices
 
 ```{tip}
